@@ -73,20 +73,6 @@
             [40.418, -3.702]
         ];
 
-        //var rect = L.rectangle(bounds, {
-        //    color: 'red',
-        //    weight: 1
-        //}).on('click', function (e) {
-            // There event is event object
-            // there e.type === 'click'
-            // there e.lanlng === L.LatLng on map
-            // there e.target.getLatLngs() - your rectangle coordinates
-            // but e.target !== rect
-        //    console.info(e);
-        //}).addTo(map)
-
-        // Initialise the FeatureGroup to store editable layers
-
         var editableLayers = new L.FeatureGroup();
         map.addLayer(editableLayers);
 
