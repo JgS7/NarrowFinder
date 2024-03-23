@@ -4,12 +4,9 @@ L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     className: 'map-tiles'
 }).addTo(map);
 L.control.scale().addTo(map);
-/*L.marker([40.418, -3.702], {
-    draggable: true
-}).addTo(map);
-*/
+
 var ar = 1;
-L.easyButton('icon ion-home', function () {
+L.easyButton('<span>&equiv;</span>', function () {
     if (ar == 1) {
         ar = 0;
         mostrar();
@@ -18,10 +15,6 @@ L.easyButton('icon ion-home', function () {
         ocultar();
     }
 }).addTo(map);
-var bounds = [
-    [40.423, -3.712],
-    [40.418, -3.702]
-];
 
 var editableLayers = new L.FeatureGroup();
 map.addLayer(editableLayers);
@@ -62,7 +55,6 @@ edit: {
 var drawControl = new L.Control.Draw(options);
 map.addControl(drawControl);
 
-var editableLayers = new L.FeatureGroup();
 map.addLayer(editableLayers);
 
 map.on('draw:created', function(e) {
@@ -79,7 +71,6 @@ else if (type === 'circle')
 {layer.bindPopup('A circle!');}
 else if (type === 'rectangle') 
 {layer.bindPopup('A rectangle!');}
-
 
 editableLayers.addLayer(layer);
 });
