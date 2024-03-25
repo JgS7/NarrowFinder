@@ -9,6 +9,39 @@ var usersRouter = require('./routes/users');
 
 var app = express();
 
+//CONEXION A BASE DE DATOS ((((REVISAR, SI ESTO ESTA LA PAGINA WEB NO FUNCIONA))))
+require('dotenv').config({
+  override: true,
+  path: path.join(__dirname, 'database.env')
+});
+
+const {Pool} = require('pg');
+
+//FALLA ESTO, CAMBIARLO DE LADO
+const pool = new Pool({
+  user: process.env.USER,
+  host: process.env.HOST,
+  database: process.env.DATABASE,
+  password: process.env.PASSWORD,
+  port: process.env.PORT
+});
+
+(async () => {
+  const client = await pool.connect();
+  
+  try {
+    const {rows} = await client.query('SELECT current_user');
+    const currentUser = rows[0]['current_user']
+    console.log(currentUser);
+  }
+  
+  catch (err) {
+    console.error(err);
+  } finally {
+    client.release();
+  }
+})();
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');

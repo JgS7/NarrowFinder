@@ -40,7 +40,7 @@ draw: {
     },
     // disable toolbar item by setting it to false
     polyline: false,
-    circle: true, // Turns off this drawing tool
+    circle: false, // Turns off this drawing tool
     polygon: true,
     marker: false,
     rectangle: true,
@@ -71,6 +71,8 @@ else if (type === 'circle')
 {layer.bindPopup('A circle!');}
 else if (type === 'rectangle') 
 {layer.bindPopup('A rectangle!');}
+
+console.info(layer.getLatLngs());
 
 editableLayers.addLayer(layer);
 });
