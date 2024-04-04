@@ -74,5 +74,6 @@ else if (type === 'rectangle')
 
 console.info(layer.getLatLngs());
 
+
 editableLayers.addLayer(layer);
 });

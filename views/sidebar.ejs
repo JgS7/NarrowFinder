@@ -1,12 +1,18 @@
 <div id="sidebar" class="sidebar">
     <h1>Narrow Finder</h1>
 
-    <form>
+    <form action="/c" method="GET">
         <label for="anchoVia">Ancho de via:</label>
         <input type="text" id="anchoVia" name="anchoVia">
+
+        <button type="lanzarConsulta">Consultar</button> 
     </form>
 
+    
+
     <div id="consola" class="consola">
+        <p><%= calles %></p>
+        
         <p>calle 1</p>
         <p>calle 2</p>
         <p>calle 3</p>
