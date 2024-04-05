@@ -31,21 +31,26 @@ router.get('/', function(req, res, next) {
 
 // Para hacer la consulta a la bd:
 router.get('/c', async (req, res, next) => {
-  var ancho = req.body.anchoVia;
-  //var ancho = document.getElementById("anchoVia").value;
+  var ancho = req.query.anchoVia;
   //console.log(document.getElementById("anchoVia").value);
 
   try {
     pool = connect();
-    const {rows} = await pool.query('SELECT current_user');
-    //Los $1 y $2 son sustituidos por ancho y bbox
+    //const {rows} = await pool.query('SELECT current_user');
+    //Los $1 y $2 son sustituidos por ancho y bbox´
+    const {rows} = await pool.query('SELECT * FROM public.caballo;'); //colunas nombres 'ID' y 'Numero' 
     //const {rows} = await pool.query('SELECT * FROM nombre_tabla
     //WHERE ST_Intersects($2,geometria de la tabla) AND (columna_ancho de la tabla<=$1) ',[ancho,bbox]);
-    const currentUser = rows[0]['current_user']
-    res.render('index', { title: 'Narrow Finder', calles:  currentUser, alam: ancho});
+    //const currentUser = rows[0]['current_user']
+    console.log(rows);
+    json_respuesta = rows[0];
+    
+    //res.render('index', { title: 'Narrow Finder', calles:  currentUser, alam: ancho});
+    res.render('index', { title: 'Narrow Finder', calles:  JSON.stringify(json_respuesta.Numero), alam: ancho});
+    //'INSERT INTO users(name, email) VALUES($1, $2)'
     
     //res.send(currentUser);
-    console.log(currentUser);
+    //console.log(currentUser);
   }
   catch (err) {
     console.error(err);
