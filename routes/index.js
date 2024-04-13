@@ -25,13 +25,14 @@ function connect(){
   
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Narrow Finder', calles: '' , alam: ''});
+  res.render('index', { title: 'Narrow Finder', calles: '' , alam: '', caja: ''});
 });
 
 
 // Para hacer la consulta a la bd:
 router.get('/c', async (req, res, next) => {
   var ancho = req.query.anchoVia;
+  var bbox = req.query.bbox;
   //console.log(document.getElementById("anchoVia").value);
 
   try {
@@ -46,7 +47,7 @@ router.get('/c', async (req, res, next) => {
     json_respuesta = rows[0];
     
     //res.render('index', { title: 'Narrow Finder', calles:  currentUser, alam: ancho});
-    res.render('index', { title: 'Narrow Finder', calles:  JSON.stringify(json_respuesta.Numero), alam: ancho});
+    res.render('index', { title: 'Narrow Finder', calles: JSON.stringify(json_respuesta.numero), alam: ancho, caja: bbox});
     //'INSERT INTO users(name, email) VALUES($1, $2)'
     
     //res.send(currentUser);

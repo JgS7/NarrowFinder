@@ -73,7 +73,12 @@ else if (type === 'rectangle')
 {layer.bindPopup('A rectangle!');}
 
 console.info(layer.getLatLngs());
+//este me lo pone longitud latitud en un array que contiene arrays
+//el PUNTO que hay de más es para cerra la geometria, sino queda abierta
+console.log(layer.toGeoJSON().geometry.coordinates);
 
+var g = layer.toGeoJSON().geometry.coordinates
+validar(g);
 
 editableLayers.addLayer(layer);
 });
