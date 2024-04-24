@@ -16,6 +16,10 @@ L.easyButton('<span>&equiv;</span>', function () {
     }
 }).addTo(map);
 
+L.geoJSON(pruebax).addTo(map);
+
+console.log(pruebax);
+
 var editableLayers = new L.FeatureGroup();
 map.addLayer(editableLayers);
 
@@ -77,8 +81,10 @@ console.info(layer.getLatLngs());
 //el PUNTO que hay de más es para cerra la geometria, sino queda abierta
 console.log(layer.toGeoJSON().geometry.coordinates);
 
-var g = layer.toGeoJSON().geometry.coordinates
+var g = layer.toGeoJSON().geometry.coordinates;
 validar(g);
+
+
 
 editableLayers.addLayer(layer);
 });
