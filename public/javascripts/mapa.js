@@ -1,9 +1,12 @@
+
 var map = L.map('map').setView([40.418, -3.702], 13);
 
 L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     className: 'map-tiles'
 }).addTo(map);
 L.control.scale().addTo(map);
+
+mostrar();
 
 var ar = 1;
 L.easyButton('<span>&equiv;</span>', function () {
@@ -16,12 +19,12 @@ L.easyButton('<span>&equiv;</span>', function () {
     }
 }).addTo(map);
 
-L.geoJSON(pruebax).addTo(map);
-
-console.log(pruebax);
+//con esto aquí me cargo las cosas, no funciona añadir poligonos porque se queda aquí. ENOTNCES HACER UNA FUNCION PARA ESTO
+//console.log(L.geoJSON(resu).addTo(map));
+//L.geoJSON(pruebax).addTo(map);
 
 var editableLayers = new L.FeatureGroup();
-map.addLayer(editableLayers);
+//map.addLayer(editableLayers);
 
 var options = {
 position: 'topleft',
@@ -77,14 +80,19 @@ else if (type === 'rectangle')
 {layer.bindPopup('A rectangle!');}
 
 console.info(layer.getLatLngs());
-//este me lo pone longitud latitud en un array que contiene arrays
-//el PUNTO que hay de más es para cerra la geometria, sino queda abierta
-console.log(layer.toGeoJSON().geometry.coordinates);
+
+// este log no me aparece :(
+console.log(layer.toGeoJSON().geometry);
+
+//lo muestra pero cuando le das a entviar deasarparece
+//del log del f12
+console.log("HHHHHHHHHHH why");
 
 var g = layer.toGeoJSON().geometry.coordinates;
+//esto es un objeto
+//var g = layer.toGeoJSON().geometry;
 validar(g);
 
-
-
 editableLayers.addLayer(layer);
+
 });
