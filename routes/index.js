@@ -1,4 +1,6 @@
 var express = require('express');
+const { check, validationResult } = require('express-validator');
+
 var router = express.Router();
 var path = require('path');
 
@@ -52,9 +54,9 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Narrow Finder', calles: '' , alam: '', caja: '', resu:''});
 });
 
-
 // Para hacer la consulta a la bd:
-router.get('/c', async (req, res, next) => {
+//.bail() después del withMessage si salta errores.
+router.get('/c', [check('anchovia').isNumeric().withMessage('Introduce un número').notEmpty().withMessage('El ancho de la via no puede estar vacío!')], async (req, res, next) => {
   var ancho = req.query.anchoVia;
   var bbox = req.query.bbox;
 
@@ -74,7 +76,7 @@ router.get('/c', async (req, res, next) => {
     //consulta = 'SELECT ST_AsGeoJSON(geom) FROM public.mad WHERE ST_Intersects(ST_GeomFromEWKT('
     //consulta2 = consulta+"'SRID=4326;POLYGON(("+box+"))'),mad.geom);" 
 
-consulta = "SELECT ST_AsGeoJSON(geom) FROM public.mad WHERE ST_Intersects(ST_GeomFromEWKT('SRID=4326;POLYGON(("+box+"))'),mad.geom);";
+    consulta = "SELECT ST_AsGeoJSON(geom) FROM public.mad WHERE ST_Intersects(ST_GeomFromEWKT('SRID=4326;POLYGON(("+box+"))'),mad.geom);";
 //    console.log(consulta2);
   console.log(consulta);  
 

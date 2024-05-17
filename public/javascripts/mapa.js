@@ -8,7 +8,7 @@ L.control.scale().addTo(map);
 
 mostrar();
 
-var ar = 1;
+var ar = 0;
 L.easyButton('<span>&equiv;</span>', function () {
     if (ar == 1) {
         ar = 0;
@@ -17,6 +17,13 @@ L.easyButton('<span>&equiv;</span>', function () {
         ar = 1;
         ocultar();
     }
+}).addTo(map);
+
+var textoAyuda = "<h1>Cómo usar: </h1> <br> <span>[+/-]</span> Controla el nivel de zoom <br> <span>[&equiv;]</span> Sirve para desplegar y contraer el menú lateral <br> <span>[?]</span> Despliega el menu de ayuda <br> <span>[&#9632;]</span> Dibuja un rectangulo  <br> <span>[&#11091;]</span> Dibuja un poligono de N lados"
+var ayudaPopup = L.popup().setContent(textoAyuda);
+
+L.easyButton('<span>?</span>', function(btn, map){
+    ayudaPopup.setLatLng(map.getCenter()).openOn(map);
 }).addTo(map);
 
 //con esto aquí me cargo las cosas, no funciona añadir poligonos porque se queda aquí. ENOTNCES HACER UNA FUNCION PARA ESTO
@@ -54,6 +61,7 @@ draw: {
 },
 edit: {
     featureGroup: editableLayers, //REQUIRED!!
+    edit: false,
     remove: true
 }
 };
