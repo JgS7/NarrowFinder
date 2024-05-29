@@ -4,18 +4,6 @@ const { check, validationResult } = require('express-validator');
 var router = express.Router();
 var path = require('path');
 
-//para gestionar el archivo temporal
-const fs = require('fs');
-const os = require('os');
-
-  // Crear un archivo temporal
-  const tmpD = os.tmpdir();
-
-  // VAMOS A USAR EL LOCALSTORAJE Y YA
-  const tmpDir = tmpD.slice(0,-19);
-  const filePath = path.join(tmpDir, 'respuesta.txt'); 
-
-
 console.log('Current directory: ' + process.cwd()); //CHEQUEAR DIR
 
 //CONEXION A BASE DE DATOS ((((REVISAR, SI ESTO ESTA LA PAGINA WEB NO FUNCIONA))))
@@ -37,7 +25,7 @@ function connect(){
     return piscina;
   }
   
-  // Adaptación del bbox para realizar la consulta SQL
+// Adaptación del bbox para realizar la consulta SQL
 function adaptBBOX(bbox) {
   var i = 0;
   var box = bbox.toString().replace(/,/g, function(match) {
@@ -50,19 +38,50 @@ function adaptBBOX(bbox) {
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  //res.render('index', { title: 'Narrow Finder', calles: '' , alam: '', caja: '', resu: ''});
-  res.render('index', { title: 'Narrow Finder', calles: '' , alam: '', caja: '', resu:''});
+  res.render('index', { title: 'Narrow Finder', calles: '' , alam: '', caja: '', resu:'', error_Ancho:'',error_bbox:''});
 });
 
 // Para hacer la consulta a la bd:
-//.bail() después del withMessage si salta errores.
-router.get('/c', [check('anchovia').isNumeric().withMessage('Introduce un número').notEmpty().withMessage('El ancho de la via no puede estar vacío!')], async (req, res, next) => {
+router.get('/c', [
+  check('anchoVia').isNumeric().trim().escape().withMessage('Por favor, introduce un número'), 
+  check('bbox').notEmpty().trim().escape().withMessage('Por favor, dibuje un polígono para realizar la consulta')], 
+  async (req, res, next) => {
+  
+  let errors = validationResult(req); 
+
+  if(!errors.isEmpty()){ 
+    //este muestra todos los mensajes de error que existan.
+    console.log(errors.array());
+
+    //muestra la longitud del array. si son los 2 errores entonces es 2, si es 1 entonces 1.
+    console.log(errors.array().length); 
+
+    //no hay bbox ni ancho correctos
+    if (errors.array().length == 2 ){
+      res.render('index', { title: 'Narrow Finder', calles: '' , alam: '', caja: '', resu:'', error_Ancho:errors.array()[0].msg,error_bbox:errors.array()[1].msg});
+      return false;
+    }
+
+    else if (errors.array().length == 1) {
+      //error en el ancho
+      if (errors.array()[0].path == 'anchoVia') {
+        res.render('index', { title: 'Narrow Finder', calles: '' , alam: '', caja: '', resu:'', error_Ancho:errors.array()[0].msg,error_bbox:req.query.bbox});
+        return false;
+      }
+      //error en el bbox
+      else if (errors.array()[0].path == 'bbox'){
+        res.render('index', { title: 'Narrow Finder', calles: '' , alam: '', caja: '', resu:'', error_Ancho:req.query.anchoVia,error_bbox:errors.array()[0].msg});
+        return false;
+      }
+    }
+  }
+
   var ancho = req.query.anchoVia;
   var bbox = req.query.bbox;
 
   // Llamada a función adaptar bbox
   var box = adaptBBOX(bbox);
-  console.log(box);
+  //console.log(box);
  
   try {
     pool = connect();
@@ -78,7 +97,7 @@ router.get('/c', [check('anchovia').isNumeric().withMessage('Introduce un númer
 
     consulta = "SELECT ST_AsGeoJSON(geom) FROM public.mad WHERE ST_Intersects(ST_GeomFromEWKT('SRID=4326;POLYGON(("+box+"))'),mad.geom);";
 //    console.log(consulta2);
-  console.log(consulta);  
+    console.log(consulta);  
 
 /** 
     var tab0 = "SELECT row_to_json(fc) FROM (" 
@@ -113,23 +132,14 @@ router.get('/c', [check('anchovia').isNumeric().withMessage('Introduce un númer
     //console.log(rows[0].st_asgeojson);
     json_respuesta = rows[0];
     
+    console.log(rows[0].st_asgeojson);
     //el validador de mapbox
     geojson = {"type": "FeatureCollection","features":[{"type": "Feature","properties": {"name": "Dinagat Islands"},"geometry":rows[0].st_asgeojson}]};
 
     //console.log(JSON.stringify(geojson));
     console.log(geojson);
     
-    //esto para cuando en la consulta no pongo ST_AsGeoJSON(geom)
-    //res.render('index', { title: 'Narrow Finder', calles: JSON.stringify(json_respuesta.geom), alam: ancho, caja: bbox, resu:json_respuesta});
-    
-//    res.render('index', { title: 'Narrow Finder', calles: JSON.stringify(json_respuesta.st_asgeojson), alam: ancho, caja: bbox, resu:JSON.stringify(rows[0].st_asgeojson)});
-//console.log(rows[0].st_asgeojson);
-// el problema de esto es que SALTA ERROR DE NO ES UN GEOJSON al llamar a funcion en index.
-//    res.render('index', { title: 'Narrow Finder', calles: JSON.stringify(json_respuesta.st_asgeojson), alam: ancho, caja: bbox, resu:rows[0].st_asgeojson});
-//res.render('index', { title: 'Narrow Finder', calles: JSON.stringify(json_respuesta.st_asgeojson), alam: ancho, caja: bbox, resu:filePath});
-//    res.render('index', { title: 'Narrow Finder', calles: JSON.stringify(json_respuesta.st_asgeojson), alam: ancho, caja: bbox, resu:geojson});
-    res.render('index', { title: 'Narrow Finder', calles: JSON.stringify(json_respuesta.st_asgeojson), alam: ancho, caja: bbox, resu:JSON.stringify(geojson)});
-        //res.render('index', { title: 'Narrow Finder', calles: JSON.stringify(json_respuesta), alam: ancho, caja: bbox, resu:dibujar(rows[0].row_to_json)});
+    res.render('index', { title: 'Narrow Finder', calles: JSON.stringify(json_respuesta.st_asgeojson), alam: ancho, caja: bbox, resu:JSON.stringify(geojson), error_Ancho:'',error_bbox:''});
     
     //res.send(currentUser);
     //console.log(currentUser);

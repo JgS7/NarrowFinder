@@ -127,3 +127,12 @@ body {
 #cerrar {
     display:none;
 }
+
+::placeholder {
+    color: var(--c, grey);
+  }
+
+.red-error .leaflet-popup-content {
+    color: #ff0000;
+    text-align: center;
+}

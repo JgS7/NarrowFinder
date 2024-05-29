@@ -5,34 +5,43 @@
     
   <body>
     <% include sidebar %>
+
     <div id="map">
     </div>
 
-        
-    <script src="/javascripts/prueba2.js"></script>
     <script src="/javascripts/mostrar_ocultar.js"></script>
-    <script src="/javascripts/popupScript.js"></script>
-
+    <script src="/javascripts/error_handling.js"></script>
     <script src="/javascripts/adaptadores.js"></script>
-
     <script src="/javascripts/mapa.js"></script>
 
-  <script>
-      //localStorage.setItem("FRED", "<%= resu %>");
-      //let b = localStorage.getItem("FRED");
-      var b =  "<%= resu %>";
-      //no hace nada, recibe object, o pone entre comilllas y leugo se las quita...
-      //console.log(JSON.parse(JSON.stringify(re)));
-      console.log(b);
-      //error porque "object" no es un json valido... VAMOS A VER SI LE PASO EL STRINGIFY
-      //con el stringify ve los simbolos raros con el unpersant. ENTONCES USAR ADAPTADOR 1. SI PONGO EL STRINGIIFY ENTONCES NECESITO LOS DOS 1 Y 2
-      //console.log(JSON.parse(b));
 
-      var bb = adaptRES(b);
-      var re = adaptRES2(bb);
-      console.log(re);
-      console.log(JSON.parse(re));
-      console.log(dibujar(JSON.parse(re)));
+  <script>
+      var error_bbox = "<%= error_bbox %>"
+      var error_ancho = "<%= error_Ancho %>"
+
+      if (error_bbox){
+        var errox_box = error_box(error_bbox);
+      }
+
+      if (error_ancho){
+        var errox_ancho = error_a(error_ancho);
+      }
+
+      var b =  "<%= resu %>";
+      if (b){
+        //console.log(b);
+        var bb = adaptRES(b);
+        var re = adaptRES2(bb);
+        //console.log(re);
+        console.log(dibujar(JSON.parse(re))); //devuelve true, que es el resultado de la funcion.
+      }
+
+      var vias = "<%= calles %>";
+      //console.log(vias);
+      if (vias){
+        add_info(vias);
+        console.log("WWWWWWWWW")
+      }
     </script>    
 
   </body>

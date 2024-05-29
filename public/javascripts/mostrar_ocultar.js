@@ -15,16 +15,18 @@ function validar(bound) {
     return true;
 }
 
+// Añade el resultado de la consulta al mapa
 function dibujar(res) {
-
     console.log(res);
-    //devuelve objetc cuando le meto object en index
-    //console.log(JSON.stringify(res));
     L.geoJSON(res,{
         style:    
         {
             color: "red"
         }}).addTo(map);
-        //console.log(L.geoJSON(res).addTo(map));
         return true;
+    }
+//resultados del sidebar consola
+add_info = function(v) {
+    var paragraph = document.getElementById("viales_estrechos");
+    paragraph.textContent += v;
     }
