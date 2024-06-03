@@ -128,21 +128,28 @@ router.get('/c', [
     //const {rows} = await pool.query('SELECT * FROM public.mad WHERE ST_Intersects($1,geom);', [bbox]);
     //WHERE ST_Intersects($2,geom) AND (columna_ancho de la tabla<=$1) ',[ancho,bbox]);
     
-    //console.log(rows);
+    console.log(rows);
+    console.log(rows[0]);
     //console.log(rows[0].st_asgeojson);
     json_respuesta = rows[0];
     
-    console.log(rows[0].st_asgeojson);
-    //el validador de mapbox
-    geojson = {"type": "FeatureCollection","features":[{"type": "Feature","properties": {"name": "Dinagat Islands"},"geometry":rows[0].st_asgeojson}]};
+    //console.log(rows[0].st_asgeojson);
 
-    //console.log(JSON.stringify(geojson));
-    console.log(geojson);
+    if (rows[0] == undefined){
+      var no_interseccion_msg = "No hay vías estrechas en el área y ancho seleccionados"
+      console.log(no_interseccion_msg);
+      res.render('index', { title: 'Narrow Finder', calles: "", alam: ancho, caja: bbox, resu:no_interseccion_msg, error_Ancho:'',error_bbox:''});
+    }
     
-    res.render('index', { title: 'Narrow Finder', calles: JSON.stringify(json_respuesta.st_asgeojson), alam: ancho, caja: bbox, resu:JSON.stringify(geojson), error_Ancho:'',error_bbox:''});
-    
-    //res.send(currentUser);
-    //console.log(currentUser);
+    else{
+      //el validador de mapbox
+      geojson = {"type": "FeatureCollection","features":[{"type": "Feature","properties": {"name": "Dinagat Islands"},"geometry":rows[0].st_asgeojson}]};
+
+      //console.log(JSON.stringify(geojson));
+      console.log(geojson);
+      
+      res.render('index', { title: 'Narrow Finder', calles: JSON.stringify(json_respuesta.st_asgeojson), alam: ancho, caja: bbox, resu:JSON.stringify(geojson), error_Ancho:'',error_bbox:''});
+    }
   }
   catch (err) {
     console.error(err);
