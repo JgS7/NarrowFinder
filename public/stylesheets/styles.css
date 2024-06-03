@@ -36,6 +36,10 @@ body {
     transition: margin-left .4s;
 }
 
+#consultaBoton{
+    margin-left: 35%;
+}
+
 .sidebar {
     position: absolute;
     height: 100%;
@@ -47,7 +51,7 @@ body {
     overflow-x: hidden;
     transition: 0.4s;
     /*modificar el padding para que se separe más, pe con 1%, pero mantener para la consola*/
-    padding: 1rem 0;
+    padding: 0.4%;
     box-sizing:border-box;
     font-family: "Roboto";
 }
@@ -68,7 +72,7 @@ body {
 
 .sidebar label, .sidebar input {
 /*quitando el margin el label con lo demas se queda más pegado*/
-    margin: 4rem auto;
+    margin: 3%;
     display: block;
     width: 90%;
     min-width:100px;
@@ -90,6 +94,8 @@ body {
     font-family: "Roboto";
     color: #eee;
     word-wrap: break-word;
+    white-space: pre-wrap;
+    word-break: break-word;
 }
 
 ::placeholder {

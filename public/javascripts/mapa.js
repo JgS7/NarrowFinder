@@ -1,6 +1,28 @@
+var ele = document.getElementById("formu");
+if(ele.addEventListener){
+    ele.addEventListener("submit", spinnn, false);  //Modern browsers
+}else if(ele.attachEvent){
+    ele.attachEvent('onsubmit', spinnn);            //Old IE
+}
+
 var map = L.map('map', {
     minZoom: 11,
 }).setView([40.418, -3.702], 11);
+
+var textoAyuda = "<h1>¡Bienvenido a Narrow Finder!</h1> Con esta aplicación web podrás visualizar las calles estrechas de los distintos distritos de Madrid. <br>Su funcionamiento es sencillo:"
+textoAyuda = textoAyuda+"<br><br> 1. Dibuja un polígono sobre el mapa que represente la zona que quieras consultar <br> 2. Establezca el ancho mínimo. <br>3. Pulse al boton consultar."
+textoAyuda = textoAyuda+"<br><br>El uso de esta aplicación es completamente orientativo, los resultados pueden variar respecto a la realidad. No se requiere cuenta para su uso y no almacena ningun tipo de dato personal"
+textoAyuda = textoAyuda+"<h1>Información adicional: </h1> <span>[+/-]</span> Controla el nivel de zoom <br> <span>[&equiv;]</span> Sirve para desplegar y contraer el menú lateral"
+textoAyuda = textoAyuda+"<br> <span>[?]</span> Despliega el menu de ayuda <br> <span>[&#9632;]</span> Dibuja un rectangulo  <br> <span>[&#11091;]</span> Dibuja un poligono de N lados"
+var ayudaPopup = L.popup().setContent(textoAyuda);
+
+//función para mostrar la ayuda al entrar
+var callBack = function () {
+    console.log("Map successfully loaded");
+    ayudaPopup.setLatLng(map.getCenter()).openOn(map);
+};
+//cuando cargue el mapa ayuda
+map.whenReady(callBack);
 
 var myBounds = map.getBounds();
 map.setMaxBounds(myBounds);
@@ -46,9 +68,6 @@ L.easyButton('<span>&equiv;</span>', function () {
         ocultar();
     }
 }).addTo(map);
-
-var textoAyuda = "<h1>Cómo usar: </h1> <br> <span>[+/-]</span> Controla el nivel de zoom <br> <span>[&equiv;]</span> Sirve para desplegar y contraer el menú lateral <br> <span>[?]</span> Despliega el menu de ayuda <br> <span>[&#9632;]</span> Dibuja un rectangulo  <br> <span>[&#11091;]</span> Dibuja un poligono de N lados"
-var ayudaPopup = L.popup().setContent(textoAyuda);
 
 L.easyButton('<span>?</span>', function(btn, map){
     ayudaPopup.setLatLng(map.getCenter()).openOn(map);

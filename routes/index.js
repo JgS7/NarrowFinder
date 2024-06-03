@@ -95,9 +95,15 @@ router.get('/c', [
     //consulta = 'SELECT ST_AsGeoJSON(geom) FROM public.mad WHERE ST_Intersects(ST_GeomFromEWKT('
     //consulta2 = consulta+"'SRID=4326;POLYGON(("+box+"))'),mad.geom);" 
 
-    consulta = "SELECT ST_AsGeoJSON(geom) FROM public.mad WHERE ST_Intersects(ST_GeomFromEWKT('SRID=4326;POLYGON(("+box+"))'),mad.geom);";
-//    console.log(consulta2);
+    consulta = "SELECT ST_AsGeoJSON(ST_MemUnion(geom)) FROM public.anchocalle WHERE ST_Intersects(ST_GeomFromEWKT('SRID=4326;POLYGON(("+box+"))'),anchocalle.geom) AND public.anchocalle.ancho_medi <= "+ancho+";";
+
+    consulta2 = {
+      text:"SELECT json_agg(public.anchocalle.vias) FROM public.anchocalle WHERE ST_Intersects(ST_GeomFromEWKT('SRID=4326;POLYGON(("+box+"))'),anchocalle.geom) AND public.anchocalle.ancho_medi <= "+ancho+" GROUP BY vias;",
+      rowMode: 'array'
+    };
+    //    console.log(consulta2);
     console.log(consulta);  
+    console.log(consulta2);
 
 /** 
     var tab0 = "SELECT row_to_json(fc) FROM (" 
@@ -124,10 +130,14 @@ router.get('/c', [
     //const {rows} = await pool.query(consulta2);
     const {rows} = await pool.query(consulta);
     //const {rows} = await pool.query(cos);
-
+    const calle3 = await pool.query(consulta2);
     //const {rows} = await pool.query('SELECT * FROM public.mad WHERE ST_Intersects($1,geom);', [bbox]);
     //WHERE ST_Intersects($2,geom) AND (columna_ancho de la tabla<=$1) ',[ancho,bbox]);
     
+
+    //console.log(String(calles));
+    //console.log(calles);
+    console.log(JSON.stringify(calle3.rows));
     console.log(rows);
     console.log(rows[0]);
     //console.log(rows[0].st_asgeojson);
@@ -148,7 +158,7 @@ router.get('/c', [
       //console.log(JSON.stringify(geojson));
       console.log(geojson);
       
-      res.render('index', { title: 'Narrow Finder', calles: JSON.stringify(json_respuesta.st_asgeojson), alam: ancho, caja: bbox, resu:JSON.stringify(geojson), error_Ancho:'',error_bbox:''});
+      res.render('index', { title: 'Narrow Finder', calles: calle3.rows, alam: "", caja: "", resu:JSON.stringify(geojson), error_Ancho:'',error_bbox:''});
     }
   }
   catch (err) {

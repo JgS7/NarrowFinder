@@ -22,7 +22,8 @@ function validar(bound) {
 
 // Añade el resultado de la consulta al mapa
 function dibujar(res) {
-    //console.log(res);
+    console.log(res);
+    console.log("wwwwwwwwwwwwasdfadgadfg");
     if (typeof res == "object"){
         console.log("Objeto recibido");
         L.geoJSON(res,{
@@ -42,8 +43,22 @@ function dibujar(res) {
     }
 }
 
-//resultados del sidebar consola
 add_info = function(v) {
     var paragraph = document.getElementById("viales_estrechos");
-    paragraph.textContent += v;
+    var split = v.split(',');
+    var split_U = [...new Set(split)]
+    var contenido = '';
+
+    console.log(split_U);
+    console.log(split_U[0]);
+    for (var i=0; i < split_U.length; i++){
+        contenido += (i+1)+"-"+split_U[i]+'\n';
     }
+    paragraph.textContent += contenido;
+    console.log(contenido);
+}
+/**el Spinner muestra el spinner*/
+function spinnn (){
+    var target = document.getElementById('map');
+    var spinner = new Spin.Spinner(true).spin(target); 
+}
