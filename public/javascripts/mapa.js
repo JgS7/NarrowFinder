@@ -19,7 +19,13 @@ var ayudaPopup = L.popup().setContent(textoAyuda);
 //función para mostrar la ayuda al entrar
 var callBack = function () {
     console.log("Map successfully loaded");
-    ayudaPopup.setLatLng(map.getCenter()).openOn(map);
+    var ini = document.cookie;
+    //console.log(ini);
+    if (!ini) {
+        ayudaPopup.setLatLng(map.getCenter()).openOn(map);
+        document.cookie = 'inicio=true';
+    }
+
 };
 //cuando cargue el mapa ayuda
 map.whenReady(callBack);
