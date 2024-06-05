@@ -58,7 +58,7 @@ map.on('zoomend', function() {
     }
 });
 
-tileLayer = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+tileLayer = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     className: 'map-tiles'
 }).addTo(map);
 
